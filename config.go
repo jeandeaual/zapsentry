@@ -40,4 +40,6 @@ type Configuration struct {
 	// Hub overrides the sentry.CurrentHub value.
 	// See sentry.Hub docs for more detail.
 	Hub *sentry.Hub
+
+	FrameMatcher FrameMatcher
 }
