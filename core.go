@@ -129,7 +129,7 @@ func (c *core) Write(ent zapcore.Entry, fs []zapcore.Field) error {
 	clone := c.with(c.addSpecialFields(ent, fs))
 
 	// only when we have local sentryScope to avoid collecting all breadcrumbs ever in a global scope
-	if c.cfg.EnableBreadcrumbs && c.cfg.BreadcrumbLevel.Enabled(ent.Level) && c.sentryScope != nil {
+	if c.cfg.EnableBreadcrumbs && c.cfg.BreadcrumbLevel.Enabled(ent.Level) {
 		breadcrumb := sentry.Breadcrumb{
 			Message:   ent.Message,
 			Data:      clone.fields,
@@ -137,7 +137,7 @@ func (c *core) Write(ent zapcore.Entry, fs []zapcore.Field) error {
 			Timestamp: ent.Time,
 		}
 
-		c.sentryScope.AddBreadcrumb(&breadcrumb, maxBreadcrumbs)
+		c.scope().AddBreadcrumb(&breadcrumb, maxBreadcrumbs)
 	}
 
 	if c.cfg.Level.Enabled(ent.Level) {
